@@ -1,0 +1,39 @@
+# ─── Secrets — NEVER commit these ────────────────────────────────────────────
+.env
+
+# ─── Docker volumes / runtime data ───────────────────────────────────────────
+pg_data/
+/tmp/uploads/
+
+# ─── Node ─────────────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+
+# ─── OS / editor noise ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Build artifacts ──────────────────────────────────────────────────────────
+dist/
+build/
+*.log
+
+# ─── Real match data — keep off public repo ───────────────────────────────────
+*.sql
+*.docx
+*.xlsx
+# (sample JSON/CSV templates in /templates/ are fine to keep)

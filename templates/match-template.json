@@ -1,0 +1,71 @@
+{
+  "_comment": "CH_Eleven Match Data Template — JSON format. Copyright (c) 2026 RAJ.Y. All rights reserved.",
+  "_instructions": [
+    "Set 'inning' to 1 for 1st innings (match goes LIVE after upload).",
+    "Set 'inning' to 2 for 2nd innings (stats ACCUMULATE, match goes COMPLETED).",
+    "Squad: max 15 players per team (30 total).",
+    "Only include players who actually batted/bowled in the innings arrays.",
+    "Players in squad but absent from batting/bowling will be flagged DNP (Did Not Play)."
+  ],
+  "match_summary": {
+    "match": "ICT Blue vs ICT Red",
+    "tournament": "ICT Supreme Skippers League",
+    "ground": "TCA Cricket Ground Hyderabad",
+    "date": "2026-05-25",
+    "overs": "10",
+    "toss": "ICT Blue won toss and chose to bat",
+    "team1_name": "ICT Blue",
+    "team2_name": "ICT Red",
+    "inning": 1
+  },
+  "squads": {
+    "team1": {
+      "name": "ICT Blue",
+      "players": [
+        { "name": "Player Name 1", "role": "BAT" },
+        { "name": "Player Name 2", "role": "BOWL" },
+        { "name": "Player Name 3", "role": "AR" },
+        { "name": "Player Name 4", "role": "WK" },
+        { "name": "Player Name 5", "role": "BAT" },
+        { "name": "Player Name 6", "role": "BAT" },
+        { "name": "Player Name 7", "role": "BOWL" },
+        { "name": "Player Name 8", "role": "AR" },
+        { "name": "Player Name 9", "role": "BAT" },
+        { "name": "Player Name 10", "role": "BOWL" },
+        { "name": "Player Name 11", "role": "BAT" }
+      ]
+    },
+    "team2": {
+      "name": "ICT Red",
+      "players": [
+        { "name": "Player Name 1", "role": "BAT" },
+        { "name": "Player Name 2", "role": "BOWL" },
+        { "name": "Player Name 3", "role": "AR" },
+        { "name": "Player Name 4", "role": "WK" },
+        { "name": "Player Name 5", "role": "BAT" },
+        { "name": "Player Name 6", "role": "BAT" },
+        { "name": "Player Name 7", "role": "BOWL" },
+        { "name": "Player Name 8", "role": "AR" },
+        { "name": "Player Name 9", "role": "BAT" },
+        { "name": "Player Name 10", "role": "BOWL" },
+        { "name": "Player Name 11", "role": "BAT" }
+      ]
+    }
+  },
+  "innings": {
+    "first_innings": {
+      "batting": [
+        { "batsman": "Player Name 1", "status": "Not Out", "runs": 0, "balls": 0, "fours": 0, "sixes": 0 },
+        { "batsman": "Player Name 2", "status": "Caught",  "runs": 0, "balls": 0, "fours": 0, "sixes": 0 }
+      ],
+      "bowling": [
+        { "bowler": "Player Name 1", "overs": 2, "runs": 20, "wickets": 1, "maidens": 0 },
+        { "bowler": "Player Name 2", "overs": 2, "runs": 15, "wickets": 2, "maidens": 0 }
+      ]
+    },
+    "second_innings": {
+      "batting": [],
+      "bowling": []
+    }
+  }
+}

@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Copyright (c) 2026 RAJ.Y — All rights reserved. CH_Eleven Fantasy Cricket Platform -->
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CH_Eleven – Fantasy Cricket</title>
+<style>
+:root{
+  --bg:#0e1410;--bg2:#141a10;--card:#1a2018;--card2:#1f2820;
+  --border:rgba(255,255,255,.09);--green:#0b1f10;
+  --gmid:#1e7a40;--glight:#2ecc71;--glighter:rgba(46,204,113,.12);
+  --gold:#f0c040;--gold-bg:rgba(240,192,64,.12);
+  --silver:#b0b8c8;--bronze:#cd7f45;
+  --red:#e74c3c;--red-bg:rgba(231,76,60,.12);
+  --text:#e8ece4;--muted:#7a8474;
+  --accent:#2ecc71;
+  --radius:10px;--radius-lg:14px;
+  font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+
+/* Header */
+header{
+  background:linear-gradient(135deg,#0b1f10 0%,#0f2915 100%);
+  border-bottom:1px solid rgba(46,204,113,.15);
+  padding:.75rem 1.1rem;display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:100;
+}
+.logo{
+  width:40px;height:40px;
+  background:linear-gradient(135deg,#1e7a40,#2ecc71);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:white;letter-spacing:-.5px;
+  flex-shrink:0;box-shadow:0 2px 10px rgba(46,204,113,.3);
+}
+.header-name{color:#fff;font-weight:700;font-size:16px;letter-spacing:-.3px}
+.header-match{color:#5a8a6a;font-size:11px;margin-top:1px;max-width:260px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status-badge{
+  margin-left:auto;font-size:10px;padding:3px 11px;
+  border-radius:20px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;
+}
+.st-upcoming{background:rgba(90,138,90,.2);color:#5a9a6a;border:1px solid rgba(90,138,90,.3)}
+.st-live{background:rgba(231,76,60,.2);color:#ff6b5a;border:1px solid rgba(231,76,60,.3);
+  animation:pulseBadge 2s infinite}
+.st-completed{background:rgba(240,192,64,.2);color:#f0c040;border:1px solid rgba(240,192,64,.3)}
+@keyframes pulseBadge{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* Nav */
+nav{background:var(--card);border-bottom:1px solid var(--border);
+  display:flex;overflow-x:auto;scrollbar-width:none;}
+nav::-webkit-scrollbar{display:none}
+nav button{flex-shrink:0;padding:11px 18px;background:none;border:none;
+  border-bottom:2px solid transparent;font-size:13px;color:var(--muted);
+  cursor:pointer;font-family:inherit;white-space:nowrap;transition:color .15s;}
+nav button.active{color:var(--glight);border-bottom-color:var(--glight);font-weight:600}
+nav button:hover:not(.active){color:var(--text)}
+
+/* Layout */
+main{max-width:820px;margin:0 auto;padding:1.1rem 1rem}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:10px;}
+.card-title{font-weight:600;font-size:13px;margin-bottom:10px;color:var(--text)}
+
+/* Stats bar */
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:12px}
+.stat-tile{background:var(--card2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:.7rem .8rem;text-align:center;}
+.stat-tile-label{font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+.stat-tile-val{font-size:20px;font-weight:700;line-height:1}
+.stat-tile-val.gold{color:var(--gold)}.stat-tile-val.green{color:var(--glight)}
+
+/* Match Summary Panel */
+.summary-panel{
+  background:linear-gradient(145deg,#162218,#1c2b1e);
+  border:1px solid rgba(46,204,113,.2);
+  border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden;
+}
+.summary-header{
+  background:linear-gradient(90deg,rgba(30,122,64,.4),rgba(46,204,113,.1));
+  padding:.85rem 1.1rem;border-bottom:1px solid rgba(46,204,113,.15);
+}
+.summary-match-name{font-size:13px;font-weight:700;color:var(--glight);margin-bottom:4px}
+.summary-meta{font-size:11px;color:var(--muted)}
+.summary-result{
+  padding:.85rem 1.1rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+.result-winner{font-size:15px;font-weight:700;color:var(--gold)}
+.result-scores{font-size:12px;color:var(--muted)}
+.summary-perfs{display:grid;grid-template-columns:1fr 1fr}
+.perf-col{padding:.85rem 1.1rem}
+.perf-col:first-child{border-right:1px solid var(--border)}
+.perf-heading{font-size:10px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;}
+.perf-table{width:100%;border-collapse:collapse}
+.perf-table th{font-size:10px;color:var(--muted);font-weight:600;
+  padding:0 4px 4px;text-align:right;}
+.perf-table th:first-child{text-align:left}
+.perf-table td{font-size:12px;padding:3px 4px;border-bottom:1px solid rgba(255,255,255,.04);}
+.perf-table td:first-child{font-weight:500;color:var(--text)}
+.perf-table td:not(:first-child){text-align:right;color:var(--muted)}
+.perf-table td.hi{color:var(--glight);font-weight:600}
+.perf-table tr:last-child td{border-bottom:none}
+
+/* Podium */
+.podium-wrap{display:flex;justify-content:center;align-items:flex-end;gap:10px;margin-bottom:14px}
+.podium-col{border-radius:10px 10px 0 0;display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;padding-top:10px;
+  width:110px;text-align:center;border:1px solid var(--border);border-bottom:none;}
+.podium-1{background:linear-gradient(180deg,rgba(240,192,64,.15),var(--card));height:100px;border-color:rgba(240,192,64,.3)}
+.podium-2{background:linear-gradient(180deg,rgba(176,184,200,.1),var(--card));height:75px;border-color:rgba(176,184,200,.25)}
+.podium-3{background:linear-gradient(180deg,rgba(205,127,69,.1),var(--card));height:60px;border-color:rgba(205,127,69,.25)}
+.podium-medal{font-size:22px;margin-bottom:2px}
+.podium-name{font-size:11px;font-weight:600;padding:0 5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
+.podium-pts{font-size:13px;font-weight:700;color:var(--gold);margin-top:2px}
+
+/* Leaderboard table */
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{background:var(--bg2);padding:8px 10px;text-align:left;
+  font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);
+  text-transform:uppercase;letter-spacing:.5px;}
+.lb-table td{padding:10px 10px;border-bottom:1px solid var(--border);font-size:13px}
+.lb-table tr:last-child td{border-bottom:none}
+.lb-table tr:hover td{background:var(--bg2)}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:50%;font-size:10px;font-weight:700;color:#fff;}
+.r1{background:var(--gold);color:#1a1a10}.r2{background:var(--silver);color:#1a1a10}
+.r3{background:var(--bronze);color:#fff}.rn{background:var(--card2);color:var(--muted)}
+.lb-pts{font-weight:700;color:var(--glight);text-align:right;min-width:55px}
+.lb-caps{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* Math accordion */
+.math-btn{background:none;border:1px solid var(--border);color:var(--muted);
+  font-size:10px;padding:3px 8px;border-radius:5px;cursor:pointer;white-space:nowrap;
+  transition:all .15s;letter-spacing:.3px}
+.math-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(74,187,93,.07)}
+.math-btn.open{border-color:var(--accent);color:var(--accent);background:rgba(74,187,93,.1)}
+.math-row td{padding:0!important;border-bottom:1px solid var(--border)}
+.math-panel{overflow:hidden;max-height:0;transition:max-height .3s ease;
+  background:rgba(255,255,255,.03);backdrop-filter:blur(4px)}
+.math-panel.open{max-height:600px}
+.math-panel-inner{padding:10px 14px 14px}
+.math-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.math-tbl th{color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.4px;padding:4px 6px;border-bottom:1px solid var(--border);text-align:left}
+.math-tbl td{padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.math-tbl tr:last-child td{border-bottom:none}
+.math-tbl tr:hover td{background:rgba(255,255,255,.03)}
+.math-mul{display:inline-block;padding:1px 5px;border-radius:4px;font-size:9px;font-weight:700}
+.mul-c{background:rgba(212,172,13,.2);color:var(--gold)}
+.mul-vc{background:rgba(192,192,192,.18);color:var(--silver)}
+.mul-n{color:var(--muted)}
+.math-contrib{text-align:right;font-weight:600;color:var(--glight)}
+.math-total-row td{background:rgba(74,187,93,.07);font-weight:700;font-size:12px}
+.math-zero{color:var(--muted)}
+.math-subtitle{font-size:9px;color:var(--muted);margin-top:2px}
+
+/* Player picker */
+.pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+  gap:4px;max-height:200px;overflow-y:auto;
+  background:var(--bg2);border-radius:8px;border:1px solid var(--border);padding:5px;}
+.pick-item{padding:5px 8px;border-radius:7px;cursor:pointer;font-size:12px;
+  display:flex;align-items:center;gap:5px;border:1px solid transparent;
+  user-select:none;transition:all .12s;}
+.pick-item:hover{background:var(--glighter)}
+.pick-item.selected{background:var(--glighter);border-color:rgba(46,204,113,.4);color:var(--glight)}
+
+/* Forms */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:10px}
+label.field{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--muted)}
+input,select{border:1px solid var(--border);border-radius:7px;padding:6px 9px;font-size:13px;
+  background:var(--bg2);color:var(--text);font-family:inherit;width:100%;transition:border .15s;}
+input:focus,select:focus{outline:none;border-color:rgba(46,204,113,.5);box-shadow:0 0 0 2px rgba(46,204,113,.1)}
+
+/* Buttons */
+.btn{cursor:pointer;border:1px solid var(--border);border-radius:8px;background:var(--card2);
+  padding:7px 14px;font-size:12px;color:var(--text);font-family:inherit;transition:all .12s;font-weight:500;}
+.btn:hover{background:var(--bg2);border-color:rgba(255,255,255,.2)}
+.btn-primary{background:var(--gmid);color:#fff;border-color:var(--gmid)}
+.btn-primary:hover{background:#1a6835}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-danger{color:var(--red);border-color:rgba(231,76,60,.4)}
+.btn-danger:hover{background:var(--red-bg)}
+.btn-sm{padding:3px 9px;font-size:11px}
+
+/* Role badges */
+.role-badge{font-size:10px;padding:2px 7px;border-radius:5px;font-weight:700;flex-shrink:0}
+.role-BAT{background:rgba(46,204,113,.15);color:#4adc8a}
+.role-BOWL{background:rgba(231,76,60,.15);color:#ff7a6a}
+.role-AR{background:rgba(240,192,64,.15);color:#f0c040}
+.role-WK{background:rgba(100,149,237,.15);color:#7aaaff}
+.tag-manual{font-size:10px;background:rgba(240,192,64,.12);color:#c09020;padding:1px 6px;border-radius:4px}
+.tag-dnp{font-size:10px;background:rgba(231,76,60,.12);color:#e74c3c;padding:1px 6px;border-radius:4px}
+
+/* Admin stat edit */
+.stat-section{font-size:11px;font-weight:700;color:var(--muted);margin:8px 0 4px;
+  text-transform:uppercase;letter-spacing:.5px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:5px;margin-bottom:8px}
+.stat-field{display:flex;flex-direction:column;gap:2px;font-size:10px;color:var(--muted)}
+.stat-field input{padding:4px 5px;font-size:12px}
+.admin-gate{background:var(--gold-bg);border:1px solid rgba(240,192,64,.25);
+  border-radius:var(--radius-lg);padding:.85rem 1rem;margin-bottom:12px;}
+
+/* Innings banner */
+.innings-banner{border-radius:var(--radius);padding:10px 14px;font-size:12px;font-weight:600;
+  margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.ib-upcoming{background:rgba(90,120,90,.25);color:#a0c8a0;border:1px solid rgba(90,120,90,.3)}
+.ib-live{background:rgba(231,76,60,.2);color:#ff8a7a;border:1px solid rgba(231,76,60,.25)}
+.ib-completed{background:rgba(240,192,64,.15);color:#f0c040;border:1px solid rgba(240,192,64,.2)}
+
+/* Dropzone */
+.dropzone{background:var(--glighter);border:2px dashed rgba(46,204,113,.35);
+  border-radius:var(--radius);padding:22px;text-align:center;cursor:pointer;transition:all .2s;}
+.dropzone:hover,.dropzone.drag-over{border-color:var(--glight);background:rgba(46,204,113,.15)}
+.dropzone-icon{font-size:36px;margin-bottom:8px}
+.dropzone-title{font-size:13px;font-weight:600;color:var(--glight);margin-bottom:4px}
+.dropzone-sub{font-size:11px;color:var(--muted);margin-bottom:12px}
+
+/* Progress */
+.progress-wrap{background:var(--border);border-radius:4px;height:5px;overflow:hidden;margin:8px 0 4px}
+.progress-bar{background:linear-gradient(90deg,var(--gmid),var(--glight));height:100%;width:0%;transition:width .3s}
+
+/* Util */
+.loading{text-align:center;padding:2.5rem;color:var(--muted);font-size:13px}
+.error-msg{color:var(--red);font-size:12px;margin-top:5px}
+.success-msg{color:var(--glight);font-size:12px;margin-top:5px}
+.warn-box{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.25);
+  border-radius:var(--radius);padding:1rem;text-align:center;margin-bottom:10px;}
+
+/* Players scorecard */
+.sc-table{width:100%;border-collapse:collapse}
+.sc-table th{background:var(--bg2);padding:7px 8px;text-align:right;
+  font-size:10px;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);
+  text-transform:uppercase;letter-spacing:.4px;}
+.sc-table th:first-child,.sc-table th:nth-child(2){text-align:left}
+.sc-table td{padding:9px 8px;border-bottom:1px solid var(--border);font-size:12px;text-align:right}
+.sc-table td:first-child,.sc-table td:nth-child(2){text-align:left}
+.sc-table tr:last-child td{border-bottom:none}
+.sc-table tr:hover td{background:var(--bg2)}
+.pts-col{font-weight:700;color:var(--glight)}
+
+/* Workflow */
+.workflow-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.workflow-btn{padding:10px 8px;border-radius:8px;border:1px solid var(--border);
+  background:var(--card2);cursor:pointer;font-family:inherit;font-size:11px;
+  font-weight:600;color:var(--text);transition:all .15s;text-align:center;}
+.workflow-btn:hover{border-color:rgba(46,204,113,.4);background:var(--glighter)}
+.workflow-btn.active-step{border-color:var(--glight);background:var(--glighter);color:var(--glight)}
+.workflow-btn.wf-danger:hover{border-color:rgba(231,76,60,.4);background:var(--red-bg);color:var(--red)}
+
+@media(max-width:480px){
+  .summary-perfs{grid-template-columns:1fr}
+  .perf-col:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  .workflow-grid{grid-template-columns:1fr}
+  main{padding:.75rem .6rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CH11</div>
+  <div style="flex:1;min-width:0">
+    <div class="header-name">CH_Eleven</div>
+    <div class="header-match" id="hdr-match">Fantasy Cricket</div>
+  </div>
+  <span class="status-badge st-upcoming" id="hdr-status">Loading</span>
+</header>
+
+<nav>
+  <button class="active" onclick="setTab('leaderboard')">🏆 Leaderboard</button>
+  <button onclick="setTab('register')">📋 Register</button>
+  <button onclick="setTab('players')">📊 Players</button>
+  <button onclick="setTab('admin')">⚙ Admin</button>
+</nav>
+
+<main>
+  <div id="tab-leaderboard"></div>
+  <div id="tab-register"  style="display:none"></div>
+  <div id="tab-players"   style="display:none"></div>
+  <div id="tab-admin"     style="display:none"></div>
+</main>
+
+<script>
+// ─── Config ────────────────────────────────────────────────────────────────
+const API=(["localhost","127.0.0.1"].includes(location.hostname))
+  ?"http://localhost:3001/api":"/api";
+
+let state={
+  tab:"leaderboard",players:[],leaderboard:[],entryCount:0,maxEntries:50,
+  match:{},adminKey:sessionStorage.getItem("ch11-admin-key")||"",
+  newTeam:{ownerName:"",playerIds:[],captainId:"",vcId:""},
+  editingPlayer:null,adminMsg:"",adminErr:"",
+  openMath:null,
+};
+
+// ─── Fetch ─────────────────────────────────────────────────────────────────
+async function fetchAll(){
+  try{
+    const[m,p,lb,c]=await Promise.all([
+      fetch(`${API}/match`).then(r=>r.json()),
+      fetch(`${API}/players`).then(r=>r.json()),
+      fetch(`${API}/leaderboard`).then(r=>r.json()),
+      fetch(`${API}/teams/count`).then(r=>r.json()),
+    ]);
+    state.match=m; state.players=Array.isArray(p)?p:[];
+    state.leaderboard=Array.isArray(lb)?lb:[]; state.entryCount=c.count||0; state.maxEntries=c.max||50;
+    updateHeader(); render();
+  }catch(e){
+    document.querySelector("main").innerHTML=
+      `<div class="loading">⚠ Cannot reach API (${API}).<br>Run: <code>docker compose up -d</code></div>`;
+  }
+}
+
+function updateHeader(){
+  const m=state.match;
+  const el=document.getElementById("hdr-match");
+  if(el)el.textContent=m.name||"Fantasy Cricket";
+  const badge=document.getElementById("hdr-status");
+  if(!badge)return;
+  const s=m.status||"upcoming";
+  badge.textContent=s.toUpperCase(); badge.className="status-badge st-"+s;
+}
+
+// ─── Tabs ──────────────────────────────────────────────────────────────────
+function setTab(t){
+  state.tab=t;
+  const tabs=["leaderboard","register","players","admin"];
+  document.querySelectorAll("nav button").forEach((b,i)=>b.classList.toggle("active",tabs[i]===t));
+  tabs.forEach(id=>{ document.getElementById("tab-"+id).style.display=id===t?"":"none"; });
+  render();
+}
+function render(){
+  const t=state.tab;
+  if(t==="leaderboard")renderLeaderboard();
+  else if(t==="register")renderRegister();
+  else if(t==="players")renderPlayers();
+  else if(t==="admin")renderAdmin();
+}
+
+// ─── Helpers ───────────────────────────────────────────────────────────────
+const v=id=>document.getElementById(id)?.value??"";
+const esc=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmt=(n,d=1)=>(Math.round((+n||0)*Math.pow(10,d))/Math.pow(10,d)).toString();
+
+// ─── LEADERBOARD ───────────────────────────────────────────────────────────
+function renderLeaderboard(){
+  const el=document.getElementById("tab-leaderboard");
+  const lb=state.leaderboard; const m=state.match;
+  const dateStr=m.match_date?new Date(m.match_date).toLocaleDateString("en-IN",{day:"numeric",month:"short"}):"—";
+
+  const statsBar=`<div class="stats-bar">
+    <div class="stat-tile"><div class="stat-tile-label">Teams</div><div class="stat-tile-val green">${state.entryCount}</div></div>
+    <div class="stat-tile"><div class="stat-tile-label">Date</div><div class="stat-tile-val" style="font-size:14px">${dateStr}</div></div>
+    <div class="stat-tile"><div class="stat-tile-label">Top Score</div><div class="stat-tile-val gold">${lb[0]?.total??"—"}</div></div>
+    <div class="stat-tile"><div class="stat-tile-label">Match</div><div class="stat-tile-val" style="font-size:12px;text-transform:capitalize">${m.status||"—"}</div></div>
+  </div>`;
+
+  const summaryPanel=(m.status==="completed"||(m.innings_loaded||0)>=1)?buildSummaryPanel(m):"";
+
+  let podium="";
+  if(lb.length>=2){
+    const order=lb.length>=3
+      ?[{t:lb[1],cls:"podium-2",med:"🥈"},{t:lb[0],cls:"podium-1",med:"🥇"},{t:lb[2],cls:"podium-3",med:"🥉"}]
+      :[{t:lb[0],cls:"podium-1",med:"🥇"},{t:lb[1],cls:"podium-2",med:"🥈"}];
+    podium=`<div class="podium-wrap">${order.map(({t,cls,med})=>`
+      <div class="podium-col ${cls}">
+        <div class="podium-medal">${med}</div>
+        <div class="podium-name">${esc(t.owner_name)}</div>
+        <div class="podium-pts">${t.total}</div>
+      </div>`).join("")}</div>`;
+  }
+
+  const rows=lb.length?lb.map(t=>{
+    const isOpen=state.openMath===t.id;
+    const mathPanel=buildMathPanel(t);
+    return `
+    <tr style="cursor:pointer" onclick="toggleMath(${t.id},event)">
+      <td style="width:40px"><span class="rank-badge ${["","r1","r2","r3"][t.rank]||"rn"}">${t.rank}</span></td>
+      <td><div style="font-weight:500">${esc(t.owner_name)}</div>
+          <div class="lb-caps">C: ${esc(t.captain_name)} · VC: ${esc(t.vc_name)}</div></td>
+      <td class="lb-pts">${t.total}</td>
+      <td style="width:80px;text-align:right">
+        <button class="math-btn ${isOpen?"open":""}" onclick="toggleMath(${t.id},event)">
+          ${isOpen?"▲ Hide":"▼ Math"}
+        </button>
+      </td>
+    </tr>
+    <tr class="math-row">
+      <td colspan="4">
+        <div class="math-panel ${isOpen?"open":""}" id="math-${t.id}">
+          <div class="math-panel-inner">${mathPanel}</div>
+        </div>
+      </td>
+    </tr>`}).join("")
+    :`<tr><td colspan="4" style="text-align:center;padding:1.5rem;color:var(--muted);font-size:13px">No teams registered yet</td></tr>`;
+
+  el.innerHTML=`${statsBar}${summaryPanel}${podium}
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="card-title" style="margin:0">🏆 Standings</div>
+        <button class="btn btn-sm" onclick="fetchAll()">↻ Refresh</button>
+      </div>
+      <table class="lb-table">
+        <thead><tr><th style="width:40px">Rank</th><th>Participant</th><th style="text-align:right">Pts</th><th style="width:80px"></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+// ─── MATH ACCORDION ────────────────────────────────────────────────────────
+function toggleMath(teamId, event){
+  if(event) event.stopPropagation();
+  state.openMath = state.openMath===teamId ? null : teamId;
+  render();
+}
+
+// Mirror of server.js calcPoints — kept in sync
+function calcPts(p){
+  if(p.manual_points!=null) return parseFloat(p.manual_points);
+  let pts=0;
+  const r=p.runs||0, bf=parseFloat(p.balls_faced)||0, w=p.wickets||0;
+  const ob=parseFloat(p.overs_bowled)||0, rc=p.runs_conceded||0;
+  // Batting
+  pts += r + (p.fours||0) + (p.sixes||0)*2;
+  if(r>=100) pts+=16; else if(r>=50) pts+=8;
+  if(p.duck) pts-=2;
+  if(bf>=10){
+    const sr=(r/bf)*100;
+    if(sr<50) pts-=6; else if(sr<60) pts-=4; else if(sr<70) pts-=2;
+    else if(sr>=150) pts+=4; else if(sr>=130) pts+=2; else if(sr>=120) pts+=1;
+  }
+  // Bowling
+  pts += w*25;
+  if(w>=5) pts+=16; else if(w>=4) pts+=8; else if(w>=3) pts+=4;
+  pts += (p.maidens||0)*8;
+  if(ob>=2){
+    const eco=rc/ob;
+    if(eco<5) pts+=6; else if(eco<6) pts+=4; else if(eco<=7) pts+=2;
+    else if(eco>=12) pts-=6; else if(eco>=11) pts-=4; else if(eco>=10) pts-=2;
+  }
+  // Fielding
+  pts += (p.catches||0)*8 + (p.stumpings||0)*12 + (p.ro_direct||0)*12 + (p.ro_indirect||0)*6;
+  return Math.round(pts*10)/10;
+}
+
+function buildMathPanel(team){
+  const playerMap={};
+  for(const p of state.players) playerMap[p.id]=p;
+  const ids=team.player_ids||[];
+  if(!ids.length) return `<div style="color:var(--muted);font-size:11px;padding:4px">No player data yet — upload innings first.</div>`;
+
+  let grandTotal=0;
+  const rows=ids.map(pid=>{
+    const p=playerMap[pid];
+    if(!p) return "";
+    const base=calcPts(p);
+    const isCap=pid===team.captain_id, isVC=pid===team.vc_id;
+    const mul=isCap?2:isVC?1.5:1;
+    const contrib=Math.round(base*mul*10)/10;
+    grandTotal+=contrib;
+
+    // Sub-breakdown hint
+    const r=p.runs||0, w=p.wickets||0, ob=parseFloat(p.overs_bowled)||0;
+    const hints=[];
+    if(r>0) hints.push(`${r}R`);
+    if(p.fours>0) hints.push(`${p.fours}×4`);
+    if(p.sixes>0) hints.push(`${p.sixes}×6`);
+    if(w>0) hints.push(`${w}W`);
+    if(ob>0) hints.push(`${fmt(ob,1)}ov`);
+    if(p.maidens>0) hints.push(`${p.maidens}M`);
+    if(p.catches>0) hints.push(`${p.catches}ct`);
+    if(p.stumpings>0) hints.push(`${p.stumpings}st`);
+
+    const mulBadge=isCap
+      ?`<span class="math-mul mul-c">C ×2</span>`
+      :isVC?`<span class="math-mul mul-vc">VC ×1.5</span>`
+      :`<span class="math-mul mul-n">×1</span>`;
+
+    return `<tr>
+      <td>
+        <div style="font-weight:500;color:var(--text)">${esc(p.name)}</div>
+        ${hints.length?`<div class="math-subtitle">${hints.join(" · ")}</div>`:""}
+      </td>
+      <td><span class="role-badge role-${p.role}" style="font-size:9px;padding:1px 5px">${p.role}</span></td>
+      <td style="text-align:center;color:${base>0?"var(--text)":"var(--muted)"}">${base}</td>
+      <td style="text-align:center">${mulBadge}</td>
+      <td class="math-contrib ${contrib===0?"math-zero":""}">${contrib}</td>
+    </tr>`;
+  }).join("");
+
+  grandTotal=Math.round(grandTotal*10)/10;
+  return `<table class="math-tbl">
+    <thead><tr>
+      <th>Player</th><th>Role</th><th style="text-align:center">Base pts</th>
+      <th style="text-align:center">Mul</th><th style="text-align:right">Contribution</th>
+    </tr></thead>
+    <tbody>${rows}
+    <tr class="math-total-row">
+      <td colspan="4" style="color:var(--glight)">Total</td>
+      <td class="math-contrib">${grandTotal}</td>
+    </tr>
+    </tbody>
+  </table>`;
+}
+
+function buildSummaryPanel(m){
+  const pl=state.players;
+  const batsmen=[...pl].filter(p=>(p.balls_faced||0)>0||(p.runs||0)>0)
+    .sort((a,b)=>(b.runs||0)-(a.runs||0)).slice(0,4)
+    .map(p=>{
+      const sr=p.balls_faced>0?fmt((p.runs/p.balls_faced)*100,1):"—";
+      return `<tr><td>${esc(p.name)}</td><td class="hi">${p.runs||0}</td><td>${p.balls_faced||0}</td><td>${p.fours||0}</td><td>${p.sixes||0}</td><td>${sr}</td></tr>`;
+    }).join("");
+  const bowlers=[...pl].filter(p=>(parseFloat(p.overs_bowled)||0)>0)
+    .sort((a,b)=>{
+      if((b.wickets||0)!==(a.wickets||0))return(b.wickets||0)-(a.wickets||0);
+      const ea=a.overs_bowled>0?a.runs_conceded/a.overs_bowled:999;
+      const eb=b.overs_bowled>0?b.runs_conceded/b.overs_bowled:999;
+      return ea-eb;
+    }).slice(0,4)
+    .map(p=>{
+      const eco=parseFloat(p.overs_bowled)>0?fmt(p.runs_conceded/p.overs_bowled,1):"—";
+      return `<tr><td>${esc(p.name)}</td><td>${fmt(p.overs_bowled,1)}</td><td>${p.maidens||0}</td><td>${p.runs_conceded||0}</td><td class="hi">${p.wickets||0}</td><td>${eco}</td></tr>`;
+    }).join("");
+
+  const resultHtml=m.result
+    ?`<div class="result-winner">🏆 ${esc(m.result)}</div>
+      <div class="result-scores">${esc(m.team_a||"")} ${esc(m.team_a_score||"")} · ${esc(m.team_b||"")} ${esc(m.team_b_score||"")}</div>`
+    :m.status==="live"
+      ?`<div class="result-winner" style="color:var(--red)">🔴 Match in Progress</div>`
+      :`<div class="result-winner" style="color:var(--muted)">⏳ Upcoming</div>`;
+  const dateStr=m.match_date?new Date(m.match_date).toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"}):"";
+
+  return `<div class="summary-panel">
+    <div class="summary-header">
+      <div class="summary-match-name">${esc(m.name||"ICT Hand Cricket")}</div>
+      <div class="summary-meta">${[m.venue,dateStr].filter(Boolean).join(" · ")}</div>
+    </div>
+    <div class="summary-result">${resultHtml}</div>
+    ${batsmen||bowlers?`
+    <div class="summary-perfs">
+      <div class="perf-col">
+        <div class="perf-heading">🏏 Best Performances – Batsmen</div>
+        ${batsmen?`<table class="perf-table">
+          <thead><tr><th>Player</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr></thead>
+          <tbody>${batsmen}</tbody></table>`:`<div style="font-size:11px;color:var(--muted)">No batting data yet</div>`}
+      </div>
+      <div class="perf-col">
+        <div class="perf-heading">🎳 Best Performances – Bowlers</div>
+        ${bowlers?`<table class="perf-table">
+          <thead><tr><th>Player</th><th>O</th><th>M</th><th>R</th><th>W</th><th>Eco</th></tr></thead>
+          <tbody>${bowlers}</tbody></table>`:`<div style="font-size:11px;color:var(--muted)">No bowling data yet</div>`}
+      </div>
+    </div>`:""}
+  </div>`;
+}
+
+// ─── REGISTER ──────────────────────────────────────────────────────────────
+function renderRegister(){
+  const el=document.getElementById("tab-register");
+  const{players,newTeam,entryCount,maxEntries,match}=state;
+  if(match.status==="live"||match.status==="completed"){
+    el.innerHTML=`<div class="warn-box" style="padding:1.5rem">
+      <div style="font-size:28px;margin-bottom:8px">${match.status==="completed"?"🏁":"🔴"}</div>
+      <div style="font-weight:600;font-size:14px">Registrations ${match.status==="completed"?"Closed":"Locked"}</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:4px">Match is ${match.status}. Check the Leaderboard for results.</div>
+    </div>`; return;
+  }
+  if(entryCount>=maxEntries){
+    el.innerHTML=`<div class="warn-box" style="padding:1.5rem">
+      <div style="font-size:28px;margin-bottom:8px">🔒</div>
+      <div style="font-weight:600;font-size:14px">Contest Full</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:4px">${maxEntries}/${maxEntries} teams registered.</div>
+    </div>`; return;
+  }
+  const selIds=newTeam.playerIds;
+  const pickerItems=players.filter(p=>!p.did_not_play).map(p=>`
+    <div class="pick-item ${selIds.includes(p.id)?"selected":""}" onclick="togglePick(${p.id})">
+      <span style="flex:1">${esc(p.name)}</span>
+      <span class="role-badge role-${p.role}" style="font-size:9px;padding:1px 5px">${p.role}</span>
+    </div>`).join("");
+  const capOpts=selIds.map(id=>{const p=players.find(pp=>pp.id===id);
+    return p?`<option value="${p.id}" ${newTeam.captainId==p.id?"selected":""}>${esc(p.name)}</option>`:""}).join("");
+  const vcOpts=selIds.filter(id=>id!=newTeam.captainId).map(id=>{const p=players.find(pp=>pp.id===id);
+    return p?`<option value="${p.id}" ${newTeam.vcId==p.id?"selected":""}>${esc(p.name)}</option>`:""}).join("");
+  const ready=newTeam.ownerName.trim()&&selIds.length===11&&newTeam.captainId&&newTeam.vcId;
+
+  el.innerHTML=`<div class="card">
+    <div class="card-title">Register your Fantasy Team</div>
+    <div style="color:var(--muted);font-size:12px;margin-bottom:12px">${entryCount} / ${maxEntries} spots filled</div>
+    <div class="form-grid">
+      <label class="field" style="grid-column:1/-1">Your name
+        <input id="owner-name" value="${esc(newTeam.ownerName)}" placeholder="e.g. Arjun M" oninput="state.newTeam.ownerName=this.value"/>
+      </label>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+      <label style="font-size:11px;color:var(--muted)">
+        Pick <strong style="color:var(--text)">11 players</strong>
+        <span style="color:${selIds.length===11?"var(--glight)":"var(--muted)"};margin-left:4px">(${selIds.length}/11)</span>
+      </label>
+      <label style="cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:4px 9px;transition:background .15s" onmouseover="this.style.background='rgba(74,187,93,.1)'" onmouseout="this.style.background=''" title="Import your 11 picks from a CSV or JSON file">
+        📎 Import Team
+        <input type="file" accept=".csv,.json" style="display:none" onchange="importTeamFile(event)"/>
+      </label>
+    </div>
+    <div id="import-status"></div>
+    <div class="pick-grid">${pickerItems||`<div style="padding:10px;color:var(--muted);font-size:12px">No players loaded — admin must add players first.</div>`}</div>
+    ${selIds.length>0?`<div class="form-grid" style="margin-top:10px">
+      <label class="field">Captain (2×)<select onchange="state.newTeam.captainId=this.value;render()"><option value="">Select…</option>${capOpts}</select></label>
+      <label class="field">Vice-captain (1.5×)<select onchange="state.newTeam.vcId=this.value;render()"><option value="">Select…</option>${vcOpts}</select></label>
+    </div>`:""}
+    <div id="reg-msg"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" ${ready?"":"disabled"} onclick="submitTeam()">✓ Register Team</button>
+      ${selIds.length>0?`<button class="btn" style="background:transparent;border:1px solid var(--muted);color:var(--muted);font-size:11px" onclick="state.newTeam.playerIds=[];state.newTeam.captainId='';state.newTeam.vcId='';render()">✕ Clear picks</button>`:""}
+    </div>
+  </div>`;
+}
+
+function togglePick(id){
+  const ids=state.newTeam.playerIds;
+  if(ids.includes(id)){
+    state.newTeam.playerIds=ids.filter(i=>i!==id);
+    if(state.newTeam.captainId==id)state.newTeam.captainId="";
+    if(state.newTeam.vcId==id)state.newTeam.vcId="";
+  }else if(ids.length<11){state.newTeam.playerIds=[...ids,id];}
+  render();
+}
+
+// ─── IMPORT TEAM FILE ──────────────────────────────────────────────────────
+function importTeamFile(event){
+  const file=event.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const text=e.target.result.trim();
+    let names=[];
+
+    // Parse JSON array  ["Name1","Name2",...] or [{name:"..."}]
+    if(file.name.endsWith(".json")){
+      try{
+        const parsed=JSON.parse(text);
+        if(Array.isArray(parsed)){
+          names=parsed.map(x=>typeof x==="string"?x.trim():(x.name||x.player||"").trim());
+        }else{ showImportStatus("error","Invalid JSON — expected an array of names."); return; }
+      }catch(e){ showImportStatus("error","Could not parse JSON file."); return; }
+    } else {
+      // CSV — one name per line, ignore blank lines & comment lines
+      names=text.split(/\r?\n/).map(l=>l.split(",")[0].trim()).filter(l=>l&&!l.startsWith("#"));
+    }
+
+    names=names.filter(Boolean);
+    if(!names.length){ showImportStatus("error","No player names found in file."); return; }
+
+    // Match against loaded squad (case-insensitive, trimmed)
+    const squad=state.players.filter(p=>!p.did_not_play);
+    const matched=[], unmatched=[];
+    for(const name of names){
+      const norm=name.toLowerCase();
+      const found=squad.find(p=>p.name.toLowerCase()===norm)
+                ||squad.find(p=>p.name.toLowerCase().includes(norm)||norm.includes(p.name.toLowerCase()));
+      if(found) matched.push(found);
+      else unmatched.push(name);
+    }
+
+    // Deduplicate
+    const seen=new Set(); const unique=matched.filter(p=>seen.has(p.id)?false:seen.add(p.id));
+
+    if(!unique.length){
+      showImportStatus("error",`No players matched the squad. Check spellings.<br><span style="color:var(--muted)">${names.slice(0,5).join(", ")}…</span>`);
+      return;
+    }
+    if(unique.length>11){
+      showImportStatus("warn",`File has ${unique.length} matches — only picking first 11.`);
+      unique.splice(11);
+    }
+
+    // Apply picks
+    state.newTeam.playerIds=unique.map(p=>p.id);
+    state.newTeam.captainId=""; state.newTeam.vcId="";
+
+    const ok=unique.length===11;
+    const unmatchedMsg=unmatched.length?`<br><span style="color:var(--muted);font-size:10px">Not found: ${unmatched.join(", ")}</span>`:"";
+    showImportStatus(ok?"success":"warn",
+      `${unique.length} player${unique.length!==1?"s":""} imported${ok?" ✓":` — need ${11-unique.length} more`}.${unmatchedMsg}`);
+
+    render();
+    // Scroll to C/VC pickers
+    setTimeout(()=>document.querySelector(".form-grid select")?.scrollIntoView({behavior:"smooth",block:"nearest"}),200);
+  };
+  reader.readAsText(file);
+  event.target.value=""; // allow re-selecting same file
+}
+
+function showImportStatus(type,html){
+  const el=document.getElementById("import-status");
+  if(!el) return;
+  const colors={success:"var(--glight)",warn:"var(--gold)",error:"var(--red)"};
+  const bgs={success:"rgba(74,187,93,.1)",warn:"rgba(212,172,13,.1)",error:"rgba(231,76,60,.1)"};
+  el.innerHTML=`<div style="font-size:11px;padding:7px 10px;border-radius:6px;margin-bottom:8px;
+    color:${colors[type]};background:${bgs[type]};border:1px solid ${colors[type]}33">${html}</div>`;
+}
+
+async function submitTeam(){
+  const{ownerName,playerIds,captainId,vcId}=state.newTeam;
+  const msg=document.getElementById("reg-msg");
+  try{
+    const res=await fetch(`${API}/teams`,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({owner_name:ownerName,player_ids:playerIds.map(Number),captain_id:+captainId,vc_id:+vcId})});
+    const data=await res.json();
+    if(!res.ok){msg.innerHTML=`<div class="error-msg">⚠ ${esc(data.error)}</div>`;return;}
+    msg.innerHTML=`<div class="success-msg">✓ Team registered! Good luck, ${esc(ownerName)} 🎉</div>`;
+    state.newTeam={ownerName:"",playerIds:[],captainId:"",vcId:""};
+    await fetchAll(); setTimeout(()=>setTab("leaderboard"),1500);
+  }catch(e){msg.innerHTML=`<div class="error-msg">Network error</div>`;}
+}
+
+// ─── PLAYERS ───────────────────────────────────────────────────────────────
+function renderPlayers(){
+  const el=document.getElementById("tab-players");
+  const sorted=[...state.players].sort((a,b)=>(b.fantasy_points||0)-(a.fantasy_points||0));
+  if(!sorted.length){el.innerHTML=`<div class="loading">No players loaded yet.</div>`;return;}
+  const rows=sorted.map((p,i)=>{
+    const ob=parseFloat(p.overs_bowled)||0;
+    const sr=p.balls_faced>0?fmt((p.runs/p.balls_faced)*100,1):"—";
+    const eco=ob>0?fmt(p.runs_conceded/ob,1):"—";
+    return `<tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><div style="font-weight:500">${esc(p.name)}</div><div style="font-size:10px;color:var(--muted)">${esc(p.cric_team)}</div></td>
+      <td><span class="role-badge role-${p.role}">${p.role}</span></td>
+      <td>${p.runs||0}</td><td>${p.balls_faced||0}</td><td>${sr}</td>
+      <td>${p.wickets||0}</td><td>${ob>0?fmt(ob,1):"—"}</td><td>${eco}</td>
+      <td class="pts-col">${p.fantasy_points}</td>
+    </tr>`;
+  }).join("");
+  el.innerHTML=`<div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="card-title" style="margin:0">Player Scorecard</div>
+      <span style="font-size:11px;color:var(--muted)">${sorted.length} players</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="sc-table">
+        <thead><tr><th>#</th><th>Player</th><th>Role</th><th>R</th><th>B</th><th>SR</th><th>W</th><th>O</th><th>Eco</th><th style="color:var(--glight)">Pts</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ─── ADMIN ─────────────────────────────────────────────────────────────────
+function renderAdmin(){
+  const el=document.getElementById("tab-admin");
+  if(!state.adminKey){
+    el.innerHTML=`<div class="admin-gate">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--gold)">🔑 Admin Access</div>
+      <div style="display:flex;gap:8px">
+        <input id="admin-key-inp" type="password" placeholder="Enter admin key" style="flex:1"/>
+        <button class="btn btn-primary" onclick="setAdminKey()">Enter</button>
+      </div>
+      <div id="admin-key-err" class="error-msg"></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">Default: <code>ch11-admin-2026</code></div>
+    </div>`; return;
+  }
+
+  const{players,editingPlayer:ep,match:m,adminMsg,adminErr}=state;
+  const il=m.innings_loaded||0; const s=m.status||"upcoming";
+  const bannerClass={upcoming:"ib-upcoming",live:"ib-live",completed:"ib-completed"}[s]||"ib-upcoming";
+  const bannerLabel={
+    upcoming:"⏳ Upcoming — upload 1st innings CSV to go Live",
+    live:"🔴 Live — 1st innings done · Upload 2nd innings CSV to complete",
+    completed:"🏆 Completed — both innings loaded · Final scores active",
+  }[s]||s;
+
+  const playerRows=players.map(p=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+      <div style="flex:1;min-width:0">
+        <span style="font-size:13px;font-weight:500">${esc(p.name)}</span>
+        <span class="role-badge role-${p.role}" style="margin-left:6px">${p.role}</span>
+        ${p.manual_points!==null&&p.manual_points!==undefined?`<span class="tag-manual" style="margin-left:4px">manual</span>`:""}
+        ${p.did_not_play?`<span class="tag-dnp" style="margin-left:4px">DNP</span>`:""}
+        <span style="font-size:10px;color:var(--muted);margin-left:6px">${esc(p.cric_team)}</span>
+      </div>
+      <div style="font-weight:600;font-size:13px;min-width:42px;text-align:right;color:${p.did_not_play?"var(--muted)":"var(--glight)"}">${p.fantasy_points}</div>
+      <button class="btn btn-sm" onclick="editPlayer(${p.id})">${ep?.id===p.id?"close":"edit"}</button>
+    </div>
+    ${ep?.id===p.id?renderEditForm(ep):""}`).join("");
+
+  el.innerHTML=`
+  <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+    <button class="btn btn-sm btn-danger" onclick="state.adminKey='';sessionStorage.removeItem('ch11-admin-key');render()">Sign out</button>
+  </div>
+  <div class="innings-banner ${bannerClass}">
+    <span>${bannerLabel}</span>
+    <span style="margin-left:auto;opacity:.7;font-size:11px;font-weight:400">Innings: ${il}/2</span>
+  </div>
+
+  <!-- Match info -->
+  <div class="card">
+    <div class="card-title">⚙ Match Info</div>
+    <div class="form-grid">
+      <label class="field" style="grid-column:1/-1">Match name<input id="m-name" value="${esc(m.name||"")}"/></label>
+      <label class="field">Team A<input id="m-ta" value="${esc(m.team_a||"")}"/></label>
+      <label class="field">Team B<input id="m-tb" value="${esc(m.team_b||"")}"/></label>
+      <label class="field">Venue<input id="m-venue" value="${esc(m.venue||"")}"/></label>
+      <label class="field">Date<input id="m-date" type="date" value="${(m.match_date||"").substring(0,10)}"/></label>
+      <label class="field">Overs<input id="m-overs" type="number" value="${m.overs||10}"/></label>
+      <label class="field">Status
+        <select id="m-status">
+          <option value="upcoming" ${m.status==="upcoming"?"selected":""}>Upcoming</option>
+          <option value="live" ${m.status==="live"?"selected":""}>Live</option>
+          <option value="completed" ${m.status==="completed"?"selected":""}>Completed</option>
+        </select>
+      </label>
+    </div>
+    <button class="btn btn-primary" onclick="saveMatch()">Save match info</button>
+    ${adminMsg?`<div class="success-msg">${esc(adminMsg)}</div>`:""}
+    ${adminErr?`<div class="error-msg">${esc(adminErr)}</div>`:""}
+  </div>
+
+  <!-- Add players -->
+  <div class="card">
+    <div class="card-title">👤 Add Players</div>
+    <div class="form-grid">
+      <label class="field">Player name<input id="np-name" placeholder="Player name"/></label>
+      <label class="field">Team<input id="np-team" placeholder="e.g. ICT Blue" list="ct-list"/>
+        <datalist id="ct-list">${[...new Set(players.map(p=>p.cric_team))].map(t=>`<option value="${esc(t)}"/>`).join("")}</datalist>
+      </label>
+      <label class="field">Role
+        <select id="np-role">
+          <option value="BAT">Batsman</option><option value="BOWL">Bowler</option>
+          <option value="AR">All-Rounder</option><option value="WK">Keeper</option>
+        </select>
+      </label>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="addPlayer()">＋ Add Player</button>
+      <span style="font-size:11px;color:var(--muted)">or bulk-import:</span>
+      <input type="file" id="squad-file-input" style="display:none" accept=".csv,.json" onchange="uploadSquadFile(event)">
+      <button class="btn" onclick="document.getElementById('squad-file-input').click()">📎 Attach Squad File</button>
+      <a href="${API.replace("/api","")}/templates/squad-template.csv" download
+         style="font-size:11px;color:var(--glight);text-decoration:none">⬇ Template</a>
+    </div>
+    <div id="squad-upload-msg" style="margin-top:6px"></div>
+  </div>
+
+  <!-- Player points entry -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+      <div>
+        <span class="card-title" style="margin:0">📝 Player Points Entry</span>
+        <span style="font-size:11px;color:var(--muted);margin-left:6px">${players.length} players · click edit to update</span>
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="clearAllPlayers()">🗑 All Clear</button>
+    </div>
+    ${playerRows||`<div style="font-size:13px;color:var(--muted);padding:10px 0">No players yet. Add manually or attach a Squad CSV above.</div>`}
+  </div>
+
+  <!-- Contest settings -->
+  <div class="card">
+    <div class="card-title">🏅 Contest Settings</div>
+    <label class="field" style="max-width:200px">Max entries (10–100)
+      <input id="max-e" type="number" min="10" max="100" value="${state.maxEntries}"/>
+    </label>
+    <button class="btn" style="margin-top:8px" onclick="saveSettings()">Save</button>
+  </div>
+
+  <!-- Upload Match Data -->
+  <div class="card">
+    <div class="card-title">📤 Upload Match Data (CSV / JSON)</div>
+    <div style="margin-bottom:10px;display:flex;gap:14px;flex-wrap:wrap">
+      <a href="${API.replace("/api","")}/templates/1st-innings-template.csv" download style="font-size:11px;color:var(--glight);text-decoration:none">⬇ 1st Innings Template</a>
+      <a href="${API.replace("/api","")}/templates/2nd-innings-template.csv" download style="font-size:11px;color:var(--glight);text-decoration:none">⬇ 2nd Innings Template</a>
+      <a href="${API.replace("/api","")}/templates/match-template.json" download style="font-size:11px;color:var(--glight);text-decoration:none">⬇ JSON Template</a>
+    </div>
+    <div class="dropzone" id="dropzone"
+         ondrop="handleDrop(event)"
+         ondragover="event.preventDefault();this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')">
+      <div class="dropzone-icon">📂</div>
+      <div class="dropzone-title">Drag & drop your innings file here</div>
+      <div class="dropzone-sub">CSV or JSON · Max 50 MB</div>
+      <input type="file" id="file-input" style="display:none" accept=".csv,.json" onchange="handleFileSelect(event)">
+      <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">Choose File</button>
+    </div>
+    <div id="file-preview" style="display:none;margin-top:12px">
+      <div style="background:var(--bg2);border-radius:var(--radius);padding:12px">
+        <div style="font-size:12px;font-weight:600;margin-bottom:10px">File Preview</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;font-size:12px">
+          <div><span style="font-size:10px;color:var(--muted);display:block">Match</span><span id="preview-match" style="font-weight:600">—</span></div>
+          <div><span style="font-size:10px;color:var(--muted);display:block">Innings</span><span id="preview-inning" style="font-weight:600">—</span></div>
+          <div><span style="font-size:10px;color:var(--muted);display:block">Teams</span><span id="preview-teams">—</span></div>
+          <div><span style="font-size:10px;color:var(--muted);display:block">Batting records</span><span id="preview-innings">—</span></div>
+        </div>
+        <div id="validation-messages" style="margin-bottom:10px"></div>
+        <div id="upload-progress" style="display:none">
+          <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px" id="progress-text">Uploading…</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" id="upload-btn" onclick="uploadMatchData()">Upload & Process</button>
+          <button class="btn" onclick="clearFilePreview()">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div id="upload-status" style="margin-top:10px"></div>
+  </div>
+
+  <!-- Match Workflow -->
+  <div class="card">
+    <div class="card-title">🎮 Match Workflow</div>
+    <div class="workflow-grid">
+      <button class="workflow-btn wf-danger" onclick="startNewGame()">🆕<br>Start New Game</button>
+      <button class="workflow-btn ${il<1?"active-step":""}" onclick="openInningsFilePicker()">1️⃣<br>Upload 1st Innings</button>
+      <button class="workflow-btn ${il===1?"active-step":""}" onclick="openInningsFilePicker()">2️⃣<br>Upload 2nd Innings</button>
+    </div>
+    <div style="background:var(--bg2);border-radius:8px;padding:10px;font-size:12px">
+      <span style="color:var(--muted)">Active match: </span>
+      <span id="match-status-display" style="font-weight:600">
+        ${m.name?esc(m.name)+" · "+esc(m.team_a||"")+" vs "+esc(m.team_b||""):"No active match"}
+      </span>
+    </div>
+  </div>`;
+}
+
+// ─── Edit form ─────────────────────────────────────────────────────────────
+function renderEditForm(ep){
+  return `<div style="background:var(--bg2);border-radius:8px;padding:10px;margin:4px 0 8px">
+    <div style="background:var(--gold-bg);border:1px solid rgba(240,192,64,.2);border-radius:6px;padding:6px 10px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--gold);font-weight:600">Manual override</span>
+      <input type="number" step="0.5" value="${ep.manual_points??""}" id="ep-manual" placeholder="(auto-calc)" style="width:80px;text-align:center"/>
+      <span style="font-size:11px;color:var(--muted)">leave blank = auto</span>
+    </div>
+    <div class="stat-section">Batting</div>
+    <div class="stat-grid">
+      <label class="stat-field">Runs<input type="number" min="0" id="ep-runs" value="${ep.runs||0}"/></label>
+      <label class="stat-field">Balls<input type="number" min="0" id="ep-bf" value="${ep.balls_faced||0}"/></label>
+      <label class="stat-field">4s<input type="number" min="0" id="ep-fours" value="${ep.fours||0}"/></label>
+      <label class="stat-field">6s<input type="number" min="0" id="ep-sixes" value="${ep.sixes||0}"/></label>
+      <label class="stat-field" style="flex-direction:row;align-items:center;gap:4px;padding-top:14px">
+        <input type="checkbox" id="ep-duck" ${ep.duck?"checked":""} style="width:14px;height:14px"/> Duck
+      </label>
+    </div>
+    <div class="stat-section">Bowling</div>
+    <div class="stat-grid">
+      <label class="stat-field">Wickets<input type="number" min="0" id="ep-wkts" value="${ep.wickets||0}"/></label>
+      <label class="stat-field">Overs<input type="number" min="0" step=".1" id="ep-ob" value="${ep.overs_bowled||0}"/></label>
+      <label class="stat-field">Conceded<input type="number" min="0" id="ep-rc" value="${ep.runs_conceded||0}"/></label>
+      <label class="stat-field">Maidens<input type="number" min="0" id="ep-maidens" value="${ep.maidens||0}"/></label>
+    </div>
+    <div class="stat-section">Fielding</div>
+    <div class="stat-grid">
+      <label class="stat-field">Catches<input type="number" min="0" id="ep-catches" value="${ep.catches||0}"/></label>
+      <label class="stat-field">Stumpings<input type="number" min="0" id="ep-stumpings" value="${ep.stumpings||0}"/></label>
+      <label class="stat-field">RO Direct<input type="number" min="0" id="ep-rod" value="${ep.ro_direct||0}"/></label>
+      <label class="stat-field">RO Indirect<input type="number" min="0" id="ep-roi" value="${ep.ro_indirect||0}"/></label>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" onclick="savePlayer()">✓ Save stats</button>
+      <button class="btn btn-sm btn-danger" onclick="deletePlayer(${ep.id})">Remove</button>
+      <button class="btn btn-sm" onclick="state.editingPlayer=null;render()">Cancel</button>
+    </div>
+    <div id="ep-msg" style="margin-top:4px"></div>
+  </div>`;
+}
+
+function editPlayer(id){
+  const p=state.players.find(pp=>pp.id===id);
+  state.editingPlayer=state.editingPlayer?.id===id?null:(p?{...p}:null);
+  render();
+}
+
+// ─── Admin actions ─────────────────────────────────────────────────────────
+function setAdminKey(){
+  const k=document.getElementById("admin-key-inp")?.value.trim();
+  if(!k)return; state.adminKey=k; sessionStorage.setItem("ch11-admin-key",k); render();
+}
+const adminHeaders=()=>({"Content-Type":"application/json","x-admin-key":state.adminKey});
+
+async function saveMatch(){
+  state.adminMsg=""; state.adminErr="";
+  const body={name:v("m-name"),team_a:v("m-ta"),team_b:v("m-tb"),
+    venue:v("m-venue"),match_date:v("m-date"),overs:parseInt(v("m-overs")),status:v("m-status")};
+  try{
+    const res=await fetch(`${API}/match`,{method:"PUT",headers:adminHeaders(),body:JSON.stringify(body)});
+    if(!res.ok){state.adminErr=(await res.json()).error;}
+    else{state.adminMsg="✓ Match info saved";await fetchAll();}
+  }catch{state.adminErr="Network error";}
+  render();
+}
+
+async function addPlayer(){
+  const name=v("np-name").trim(),ct=v("np-team").trim(),role=v("np-role");
+  if(!name)return;
+  try{
+    const res=await fetch(`${API}/players`,{method:"POST",headers:adminHeaders(),body:JSON.stringify({name,cric_team:ct,role})});
+    if(res.ok){
+      state.adminMsg=`✓ Added ${name}`;
+      // Clear input fields after successful add
+      const inp=document.getElementById("np-name"); if(inp)inp.value="";
+    } else {
+      const d=await res.json(); state.adminErr=d.error||"Failed to add player";
+    }
+  }catch{ state.adminErr="Network error"; }
+  await fetchAll();
+}
+
+async function savePlayer(){
+  const ep=state.editingPlayer; if(!ep)return;
+  const manualRaw=document.getElementById("ep-manual")?.value;
+  const body={
+    name:ep.name,cric_team:ep.cric_team,role:ep.role,
+    runs:+v("ep-runs"),balls_faced:+v("ep-bf"),fours:+v("ep-fours"),sixes:+v("ep-sixes"),
+    duck:document.getElementById("ep-duck")?.checked||false,
+    wickets:+v("ep-wkts"),overs_bowled:v("ep-ob"),runs_conceded:+v("ep-rc"),maidens:+v("ep-maidens"),
+    catches:+v("ep-catches"),stumpings:+v("ep-stumpings"),ro_direct:+v("ep-rod"),ro_indirect:+v("ep-roi"),
+    manual_points:manualRaw!==""&&manualRaw!=null?parseFloat(manualRaw):null
+  };
+  try{
+    const res=await fetch(`${API}/players/${ep.id}`,{method:"PUT",headers:{...adminHeaders(),"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(res.ok){state.editingPlayer=null;state.adminMsg="✓ Player saved";await fetchAll();}
+    else state.adminErr=(await res.json()).error;
+  }catch{state.adminErr="Network error";}
+  render();
+}
+
+async function deletePlayer(id){
+  if(!confirm("Delete this player?"))return;
+  await fetch(`${API}/players/${id}`,{method:"DELETE",headers:adminHeaders()});
+  if(state.editingPlayer?.id===id)state.editingPlayer=null;
+  await fetchAll(); render();
+}
+
+async function startNewGame(){
+  const name=prompt("Match name (e.g. KL RAHUL vs Team Virat kohli):","");
+  if(name===null)return;
+  const teamA=prompt("Team A name:","");if(teamA===null)return;
+  const teamB=prompt("Team B name:","");if(teamB===null)return;
+  const venue=prompt("Venue (optional):","");
+  const overs=prompt("Overs per innings:","10");
+  try{
+    const res=await fetch(`${API}/match/reset`,{method:"POST",headers:{...adminHeaders(),"Content-Type":"application/json"},
+      body:JSON.stringify({name:name.trim()||"New Match",team_a:teamA.trim(),team_b:teamB.trim(),venue:venue.trim(),overs:parseInt(overs)||10})});
+    const data=await res.json();
+    if(!res.ok){state.adminErr=data.error||"Reset failed";}
+    else{state.adminMsg="✓ New game started!";await fetchAll();setTab("leaderboard");}
+  }catch{state.adminErr="Network error";}
+  render();
+}
+
+async function clearAllPlayers(){
+  if(!confirm("Delete ALL players? This cannot be undone."))return;
+  try{
+    await fetch(`${API}/players`,{method:"DELETE",headers:adminHeaders()});
+    state.adminMsg="✓ All players cleared";await fetchAll();
+  }catch{state.adminErr="Network error";}
+  render();
+}
+
+// ─── File upload helpers ──────────────────────────────────────────────────────
+let selectedFile=null;
+
+// Aliases wiring HTML handlers → single JS handler
+function handleFileSelect(e){ handleDropZone(e); }
+function handleDrop(e){ e.preventDefault(); handleDropZone(e); }
+
+function clearFilePreview(){
+  selectedFile=null;
+  const dz=document.getElementById("dropzone");
+  const fp=document.getElementById("file-preview");
+  const us=document.getElementById("upload-status");
+  if(dz){
+    // Reset dropzone to its default state
+    dz.querySelector(".dropzone-title") && (dz.querySelector(".dropzone-title").textContent="Drag & drop your innings file here");
+    dz.querySelector(".dropzone-icon")  && (dz.querySelector(".dropzone-icon").textContent="📂");
+  }
+  if(fp)fp.style.display="none";
+  if(us)us.innerHTML="";
+  // Reset file input so the same file can be re-selected
+  const fi=document.getElementById("file-input"); if(fi)fi.value="";
+}
+
+async function saveSettings(){
+  const val=parseInt(document.getElementById("max-e")?.value);
+  if(isNaN(val))return;
+  try{
+    const res=await fetch(`${API}/settings`,{method:"PUT",headers:adminHeaders(),body:JSON.stringify({max_entries:val})});
+    if(res.ok){state.adminMsg="✓ Settings saved";await fetchAll();}
+    else state.adminErr=(await res.json()).error||"Save failed";
+  }catch{state.adminErr="Network error";}
+  render();
+}
+
+function openInningsFilePicker(){
+  // Scroll the drop zone into view first so the user sees the preview appear
+  const dz=document.getElementById("dropzone");
+  if(dz) dz.scrollIntoView({behavior:"smooth",block:"center"});
+  // Small delay so scroll completes before native file dialog opens
+  setTimeout(()=>{
+    const fi=document.getElementById("file-input");
+    if(fi) fi.click();
+  }, 200);
+}
+
+function parseCsvPreview(text,filename){
+  const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+  let match="",inning="",teams="",bat1=0,bat2=0,bowl1=0,bowl2=0;
+  for(const l of lines){
+    const c=l.split(",").map(s=>s.trim());
+    if(c[0]==="MATCH SUMMARY"){
+      if(c[1]==="Match"||c[1]==="match")match=c[2]||"";
+      if(c[1]==="Inning"||c[1]==="inning")inning=c[2]||"";
+      if(c[1]==="Team 1 Name")teams=(c[2]||"")+" vs ";
+      if(c[1]==="Team 2 Name")teams+=(c[2]||"");
+    }
+    if(c[0].includes("1ST INNINGS BATTING")&&c[1])bat1++;
+    if(c[0].includes("2ND INNINGS BATTING")&&c[1])bat2++;
+    if(c[0].includes("1ST INNINGS BOWLING")&&c[1])bowl1++;
+    if(c[0].includes("2ND INNINGS BOWLING")&&c[1])bowl2++;
+  }
+  return{match,inning,teams,bat1,bat2,bowl1,bowl2};
+}
+
+function handleDropZone(e){
+  e.preventDefault();
+  const file=e.dataTransfer?.files[0]||e.target.files?.[0];
+  if(!file)return;
+  selectedFile=file;
+  const reader=new FileReader();
+  reader.onload=ev=>showFilePreview(ev.target.result,file.name);
+  reader.readAsText(file);
+}
+
+function showFilePreview(text,filename){
+  const fp=document.getElementById("file-preview");
+  if(!fp)return;
+  let info={match:"",inning:"",teams:"",bat1:0,bat2:0};
+  let valid=false;
+  if(filename.endsWith(".json")){
+    try{
+      const j=JSON.parse(text);
+      info.match=j.match_summary?.match||"";
+      info.inning=j.match_summary?.inning||"";
+      info.teams=(j.match_summary?.team1_name||"")+" vs "+(j.match_summary?.team2_name||"");
+      valid=!!info.match;
+    }catch{valid=false;}
+  }else{
+    info=parseCsvPreview(text,filename);
+    valid=!!(info.match&&info.inning);
+  }
+  const totalBat=info.bat1+info.bat2, totalBowl=(info.bowl1||0)+(info.bowl2||0);
+  fp.style.display="";
+  fp.innerHTML=`
+    <div class="preview-grid">
+      <div><div class="preview-label">Match</div><div class="preview-val">${esc(info.match||"—")}</div></div>
+      <div><div class="preview-label">Innings</div><div class="preview-val">${info.inning ? info.inning+(info.inning==="1"?" st":" nd")+" innings" : "—"}</div></div>
+      <div><div class="preview-label">Teams</div><div class="preview-val">${esc(info.teams||"—")}</div></div>
+      <div><div class="preview-label">Batting records</div><div class="preview-val">${totalBat} batting records (${info.bat1} 1st + ${info.bat2||0} 2nd)</div></div>
+    </div>
+    ${valid
+      ?'<div style="color:var(--glight);font-size:11px;margin-top:6px">✓ File looks good — ready to upload</div>'
+      :'<div style="color:var(--red);font-size:11px;margin-top:6px">⚠ Could not detect match name/inning — check CSV format</div>'}
+    <progress id="upload-prog" value="0" max="100" style="display:none;width:100%;height:6px;margin:8px 0;border-radius:3px;accent-color:var(--glight)"></progress>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn btn-primary" id="upload-btn-main" onclick="uploadMatchData()">⬆ Upload & Process</button>
+      <button class="btn" style="background:transparent;border:1px solid var(--muted);color:var(--muted)" onclick="clearFilePreview()">Cancel</button>
+    </div>`;
+}
+
+async function uploadSquadFile(event){
+  const file=event.target.files[0]; if(!file)return;
+  const fd=new FormData(); fd.append("file",file,file.name);
+  const msg=document.getElementById("squad-upload-msg");
+  try{
+    const res=await fetch(`${API}/squad/upload`,{method:"POST",headers:{"x-admin-key":state.adminKey},body:fd});
+    const data=await res.json();
+    if(!res.ok){if(msg)msg.innerHTML=`<div class="error-msg">⚠ ${esc(data.error)}</div>`;}
+    else{
+      if(msg)msg.innerHTML=`<div class="success-msg">✓ ${data.created||data.players_loaded||0} players loaded</div>`;
+      await fetchAll();
+    }
+  }catch(e){if(msg)msg.innerHTML=`<div class="error-msg">Network error: ${esc(e.message)}</div>`;}
+}
+
+async function uploadMatchData(){
+  if(!selectedFile){return;}
+  const btn=document.getElementById("upload-btn-main");
+  const prog=document.getElementById("upload-prog");
+  const us=document.getElementById("upload-status");
+  if(btn)btn.disabled=true;
+  if(prog){prog.style.display="block";prog.value=0;}
+  if(us)us.innerHTML="";
+  function updateProgress(v){if(prog)prog.value=v;}
+  try{
+    updateProgress(30);
+    const fd=new FormData();
+    fd.append("file",selectedFile,selectedFile.name);
+    const res=await fetch(`${API}/match/bulk-upload`,{
+      method:"POST",headers:{"x-admin-key":state.adminKey},body:fd
+    });
+    updateProgress(80);
+    const data=await res.json();
+    updateProgress(100);
+    if(!res.ok){
+      const detail=Array.isArray(data.details)?data.details.join(", "):(data.error||"Unknown error");
+      if(us)us.innerHTML=`<div class="error-msg">⚠ Upload failed: ${esc(detail)}<br>
+        <span style="font-size:11px;color:var(--muted)">Tip: Check that your CSV has MATCH SUMMARY,Match,... and MATCH SUMMARY,Inning,1 (or 2) lines.</span>
+      </div>`;
+    }else{
+      if(us)us.innerHTML=`<div class="success-msg">
+        ✓ Inning ${data.inning} processed · ${data.stats_updated||0} players updated · Match: <strong>${data.match_status}</strong>
+        ${data.players_created?` · ${data.players_created} new players auto-created`:""}
+      </div>`;
+      clearFilePreview(); await fetchAll();
+      if(data.match_status==="completed")setTimeout(()=>setTab("leaderboard"),1800);
+    }
+  }catch(e){
+    if(us)us.innerHTML=`<div class="error-msg">⚠ Network error: ${esc(e.message)}</div>`;
+  }finally{
+    if(btn)btn.disabled=false;
+    if(prog)prog.style.display="none";
+  }
+}
+
+// ─── Auto-refresh + Boot ─────────────────────────────────────────────────────
+setInterval(()=>{if(state.tab==="leaderboard")fetchAll();},30000);
+fetchAll();
+</script>
+<footer style="text-align:center;padding:18px 0 14px;font-size:12px;color:var(--muted);letter-spacing:0.03em;border-top:1px solid rgba(255,255,255,0.06);margin-top:32px;">
+  Developed with ❤️ by <strong style="color:var(--accent)">Loki.Y</strong>
+</footer>
+</body>
+</html>

@@ -1,0 +1,208 @@
+{
+  "match_info": {
+    "match": "TEAM RAHUL DAVID d Wall vs Team Azharuddin",
+    "ground": "TCA CRICKET GROUND, Hyderabad",
+    "date": "2026-05-25, 16:50 PM UTC",
+    "toss": "Team Azharuddin opt to field"
+  },
+  "inning": 2,
+  "team": "Team Azharuddin",
+  "captain": "Lazy Nani",
+  "total_runs": 95,
+  "total_wickets": 10,
+  "overs": 6.1,
+  "batting": [
+    {
+      "batsman": "Lazy Nani",
+      "team": "RHB",
+      "status": "b Innocent",
+      "runs": 2,
+      "balls": 2,
+      "minutes": 1,
+      "4s": 0,
+      "6s": 0
+    },
+    {
+      "batsman": "Bunty",
+      "team": "RHB",
+      "status": "b Vicky MSV",
+      "runs": 5,
+      "balls": 3,
+      "minutes": 5,
+      "4s": 0,
+      "6s": 0
+    },
+    {
+      "batsman": "Paaru Chowdary",
+      "team": "RHB",
+      "status": "b Rana Billa",
+      "runs": 22,
+      "balls": 8,
+      "minutes": 8,
+      "4s": 0,
+      "6s": 1
+    },
+    {
+      "batsman": "Badri chowdhary",
+      "team": "RHB",
+      "status": "b ARUN (Ak)",
+      "runs": 13,
+      "balls": 5,
+      "minutes": 6,
+      "4s": 1,
+      "6s": 0
+    },
+    {
+      "batsman": "BUJUK MAMA",
+      "team": "RHB",
+      "status": "b TED",
+      "runs": 9,
+      "balls": 4,
+      "minutes": 10,
+      "4s": 1,
+      "6s": 0
+    },
+    {
+      "batsman": "Lucky666",
+      "team": "RHB",
+      "status": "b ARUN (Ak)",
+      "runs": 12,
+      "balls": 3,
+      "minutes": 1,
+      "4s": 0,
+      "6s": 2
+    },
+    {
+      "batsman": "AKHIL R",
+      "team": "LHB",
+      "status": "b Kavya S",
+      "runs": 20,
+      "balls": 5,
+      "minutes": 2,
+      "4s": 0,
+      "6s": 3
+    },
+    {
+      "batsman": "Ghost Ryder",
+      "team": "RHB",
+      "status": "b Kavya S",
+      "runs": 0,
+      "balls": 1,
+      "minutes": 1,
+      "4s": 0,
+      "6s": 0
+    },
+    {
+      "batsman": "Virat 18",
+      "team": "RHB",
+      "status": "b TED",
+      "runs": 7,
+      "balls": 3,
+      "minutes": 2,
+      "4s": 0,
+      "6s": 1
+    },
+    {
+      "batsman": "Monika Chill",
+      "team": "RHB",
+      "status": "b Raj007",
+      "runs": 3,
+      "balls": 2,
+      "minutes": 5,
+      "4s": 0,
+      "6s": 0
+    },
+    {
+      "batsman": "Thansy Kp",
+      "team": "RHB",
+      "status": "not out",
+      "runs": 2,
+      "balls": 1,
+      "minutes": 4,
+      "4s": 0,
+      "6s": 0
+    }
+  ],
+  "bowling": [
+    {
+      "bowler": "Innocent",
+      "o": 1.0,
+      "m": 0,
+      "r": 15,
+      "w": 1,
+      "0s": 1,
+      "4s": 0,
+      "6s": 1
+    },
+    {
+      "bowler": "Vicky MSV",
+      "o": 1.0,
+      "m": 0,
+      "r": 20,
+      "w": 1,
+      "0s": 1,
+      "4s": 1,
+      "6s": 0
+    },
+    {
+      "bowler": "Rana Billa",
+      "o": 1.0,
+      "m": 0,
+      "r": 9,
+      "w": 1,
+      "0s": 2,
+      "4s": 0,
+      "6s": 0
+    },
+    {
+      "bowler": "Cyclone Cyclone",
+      "o": 0.0,
+      "m": 0,
+      "r": 0,
+      "w": 0,
+      "0s": 0,
+      "4s": 0,
+      "6s": 0
+    },
+    {
+      "bowler": "ARUN (Ak)",
+      "o": 1.0,
+      "m": 0,
+      "r": 24,
+      "w": 2,
+      "0s": 2,
+      "4s": 0,
+      "6s": 4
+    },
+    {
+      "bowler": "Kavya S",
+      "o": 1.0,
+      "m": 0,
+      "r": 12,
+      "w": 2,
+      "0s": 2,
+      "4s": 0,
+      "6s": 1
+    },
+    {
+      "bowler": "TED",
+      "o": 1.0,
+      "m": 0,
+      "r": 15,
+      "w": 2,
+      "0s": 2,
+      "4s": 1,
+      "6s": 1
+    },
+    {
+      "bowler": "Raj007",
+      "o": 0.1,
+      "m": 0,
+      "r": 0,
+      "w": 1,
+      "0s": 1,
+      "4s": 0,
+      "6s": 0
+    }
+  ]
+}

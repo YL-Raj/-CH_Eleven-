@@ -1,0 +1,8 @@
+{
+  "name": "ch-eleven-frontend",
+  "version": "1.0.0",
+  "description": "CH_Eleven fantasy cricket web interface",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {}
+}
