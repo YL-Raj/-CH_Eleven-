@@ -1,0 +1,24 @@
+MATCH SUMMARY,Match,Team Alpha vs Team Beta
+MATCH SUMMARY,Team 1 Name,Team Alpha
+MATCH SUMMARY,Team 2 Name,Team Beta
+MATCH SUMMARY,Inning,1
+MATCH SUMMARY,Ground,Your Ground Name
+MATCH SUMMARY,Date,2026-01-01
+MATCH SUMMARY,Overs,10
+
+1ST INNINGS BATTING,Batsman,Status,Runs,Balls,4s,6s
+1ST INNINGS BATTING,Player One,b Player TwentyTwo,34,18,4,2
+1ST INNINGS BATTING,Player Two,b Player TwentyOne,12,9,1,0
+1ST INNINGS BATTING,Player Three,run out,8,6,1,0
+1ST INNINGS BATTING,Player Four,b Player TwentyThree,45,22,5,2
+1ST INNINGS BATTING,Player Five,Not Out,20,10,2,1
+1ST INNINGS BATTING,Player Six,b Player TwentyTwo,0,1,0,0
+1ST INNINGS BATTING,Player Seven,b Player TwentyOne,5,4,0,0
+1ST INNINGS BATTING,Player Eight,Not Out,3,2,0,0
+
+1ST INNINGS BOWLING,Bowler,Overs,Runs,Wickets,Maidens
+1ST INNINGS BOWLING,Player TwentyOne,2.0,24,2,0
+1ST INNINGS BOWLING,Player TwentyTwo,2.0,18,2,0
+1ST INNINGS BOWLING,Player TwentyThree,2.0,32,1,0
+1ST INNINGS BOWLING,Player Nineteen,2.0,28,0,1
+1ST INNINGS BOWLING,Player Twenty,2.0,22,0,0
