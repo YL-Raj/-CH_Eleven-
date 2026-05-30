@@ -10,6 +10,9 @@ app.use(express.json());
 app.use(cors());
 app.use("/templates", express.static(path.join(__dirname, "../templates")));
 
+// ─── Health check — instant 200, no DB needed (used by Railway) ──────────────
+app.get("/health", (req, res) => res.json({ status: "ok" }));
+
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const ADMIN_SECRET = process.env.ADMIN_SECRET || "ch11-admin-2026";
 
