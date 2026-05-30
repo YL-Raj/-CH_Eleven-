@@ -37,15 +37,6 @@ const ADMIN_SECRET = process.env.ADMIN_SECRET || "ch11-admin-2026";
     `ALTER TABLE match_info ADD COLUMN IF NOT EXISTS result        TEXT DEFAULT ''`,
     `ALTER TABLE match_info ADD COLUMN IF NOT EXISTS team_a_score  TEXT DEFAULT ''`,
     `ALTER TABLE match_info ADD COLUMN IF NOT EXISTS team_b_score  TEXT DEFAULT ''`,
-    `DO $$ BEGIN
-       IF NOT EXISTS (
-         SELECT 1 FROM pg_constraint
-         WHERE conname = 'unique_owner_name'
-         AND conrelid = 'contest_teams'::regclass
-       ) THEN
-         ALTER TABLE contest_teams ADD CONSTRAINT unique_owner_name UNIQUE (owner_name);
-       END IF;
-     END $$`,
   ];
   let ok = 0;
   for (const sql of migrations) {
@@ -216,18 +207,10 @@ app.post("/api/teams", async (req, res) => {
     return res.status(409).json({ error: `Contest full (${max} max entries)` });
 
   const { rows } = await pool.query(
-    `INSERT INTO contest_teams (owner_name, player_ids, captain_id, vc_id)
-     VALUES ($1,$2,$3,$4)
-     ON CONFLICT (owner_name) DO UPDATE
-       SET player_ids   = EXCLUDED.player_ids,
-           captain_id   = EXCLUDED.captain_id,
-           vc_id        = EXCLUDED.vc_id,
-           registered_at = NOW()
-     RETURNING *, (xmax <> 0) AS updated`,
+    "INSERT INTO contest_teams (owner_name, player_ids, captain_id, vc_id) VALUES ($1,$2,$3,$4) RETURNING *",
     [owner_name.trim(), player_ids.map(Number), parseInt(captain_id), parseInt(vc_id)]
   );
-  const wasUpdate = rows[0].updated;
-  res.status(wasUpdate ? 200 : 201).json({ ...rows[0], updated: wasUpdate });
+  res.status(201).json(rows[0]);
 });
 
 app.delete("/api/teams/:id", adminOnly, async (req, res) => {
@@ -825,60 +808,4 @@ function parseCSVDirectly(csvContent) {
     const is1stBat  = sec.includes("1ST INNINGS") && sec.includes("BATTING");
     const is2ndBat  = sec.includes("2ND INNINGS") && sec.includes("BATTING");
     const is1stBowl = sec.includes("1ST INNINGS") && sec.includes("BOWLING");
-    const is2ndBowl = sec.includes("2ND INNINGS") && sec.includes("BOWLING");
-
-    if (is1stBat || is2ndBat) {
-      const inKey = is1stBat ? "first_innings" : "second_innings";
-      const batsman = cols[1];
-      if (!batsman || ["Batsman","Total","Extras",""].includes(batsman)) continue;
-      const toInt = s => { const n = parseInt(s); return isNaN(n) ? 0 : n; };
-      result.innings[inKey].batting.push({
-        batsman, status: cols[2] || "",
-        runs: toInt(cols[3]), balls: toInt(cols[4]),
-        fours: toInt(cols[5]), sixes: toInt(cols[6]),
-      });
-      continue;
-    }
-
-    if (is1stBowl || is2ndBowl) {
-      const inKey = is1stBowl ? "first_innings" : "second_innings";
-      const bowler = cols[1];
-      if (!bowler || ["Bowler",""].includes(bowler)) continue;
-      const toInt = s => { const n = parseInt(s); return isNaN(n) ? 0 : n; };
-      result.innings[inKey].bowling.push({
-        bowler, overs: parseCricketOvers(cols[2]),
-        runs: toInt(cols[3]), wickets: toInt(cols[4]), maidens: toInt(cols[5]),
-      });
-      continue;
-    }
-  }
-  return result;
-}
-
-async function parseCSVViaPython(csvContent) {
-  // Try OCR service first (richer parsing), fall back to JS parser
-  try {
-    const form = new FormData();
-    form.append("csv_data", csvContent);
-    const ocrUrl = process.env.OCR_SERVICE_URL || "http://ocr-service:5000";
-    const r = await fetch(`${ocrUrl}/api/csv/parse`, {
-      method: "POST",
-      headers: { "x-admin-key": process.env.ADMIN_SECRET || "ch11-admin-2026", ...form.getHeaders() },
-      body: form,
-    });
-    if (r.ok) {
-      const parsed = await r.json();
-      if (parsed.match_summary?.match) return parsed;
-    }
-    throw new Error("OCR service returned no match name");
-  } catch (e) {
-    console.warn("OCR CSV parse failed, using JS fallback parser:", e.message);
-    return parseCSVDirectly(csvContent);
-  }
-}
-
-// ─── Health ───────────────────────────────────────────────────────────────────
-app.get("/health", (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
-
-const PORT = parseInt(process.env.PORT || "3001", 10);
-app.listen(PORT, () => console.log(`CH_Eleven API running on :${PORT}`));
+    const is2ndBowl = sec.includes("2ND INNINGS") && sec.includes

@@ -870,15 +870,4 @@ async function parseCSVViaPython(csvContent) {
       const parsed = await r.json();
       if (parsed.match_summary?.match) return parsed;
     }
-    throw new Error("OCR service returned no match name");
-  } catch (e) {
-    console.warn("OCR CSV parse failed, using JS fallback parser:", e.message);
-    return parseCSVDirectly(csvContent);
-  }
-}
-
-// ─── Health ───────────────────────────────────────────────────────────────────
-app.get("/health", (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
-
-const PORT = parseInt(process.env.PORT || "3001", 10);
-app.listen(PORT, () => console.log(`CH_Eleven API running on :${PORT}`));
+    throw new Er

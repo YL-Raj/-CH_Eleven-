@@ -1,0 +1,21 @@
+{
+  "name": "ch-eleven-backend",
+  "version": "1.0.0",
+  "description": "CH_Eleven fantasy cricket",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "multer": "^1.4.5-lts.1",
+    "form-data": "^4.0.0",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

@@ -116,13 +116,13 @@ main{max-width:820px;margin:0 auto;padding:1.1rem 1rem}
 /* Podium */
 .podium-wrap{display:flex;justify-content:center;align-items:flex-end;gap:10px;margin-bottom:14px}
 .podium-col{border-radius:10px 10px 0 0;display:flex;flex-direction:column;
-  align-items:center;justify-content:flex-start;padding-top:8px;padding-bottom:6px;
-  width:120px;text-align:center;border:1px solid var(--border);border-bottom:none;overflow:hidden;}
-.podium-1{background:linear-gradient(180deg,rgba(240,192,64,.15),var(--card));height:130px;border-color:rgba(240,192,64,.3)}
-.podium-2{background:linear-gradient(180deg,rgba(176,184,200,.1),var(--card));height:110px;border-color:rgba(176,184,200,.25)}
-.podium-3{background:linear-gradient(180deg,rgba(205,127,69,.1),var(--card));height:95px;border-color:rgba(205,127,69,.25)}
-.podium-medal{font-size:22px;margin-bottom:1px}
-.podium-name{font-size:11px;font-weight:700;padding:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;color:var(--text)}
+  align-items:center;justify-content:flex-start;padding-top:10px;
+  width:110px;text-align:center;border:1px solid var(--border);border-bottom:none;}
+.podium-1{background:linear-gradient(180deg,rgba(240,192,64,.15),var(--card));height:100px;border-color:rgba(240,192,64,.3)}
+.podium-2{background:linear-gradient(180deg,rgba(176,184,200,.1),var(--card));height:75px;border-color:rgba(176,184,200,.25)}
+.podium-3{background:linear-gradient(180deg,rgba(205,127,69,.1),var(--card));height:60px;border-color:rgba(205,127,69,.25)}
+.podium-medal{font-size:22px;margin-bottom:2px}
+.podium-name{font-size:11px;font-weight:600;padding:0 5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
 .podium-pts{font-size:13px;font-weight:700;color:var(--gold);margin-top:2px}
 
 /* Leaderboard table */
@@ -378,10 +378,9 @@ function renderLeaderboard(){
     podium=`<div class="podium-wrap">${order.map(({t,cls,med})=>`
       <div class="podium-col ${cls}" style="animation:riseUp .5s ease both">
         <div class="podium-medal">${med}</div>
-        <div class="podium-name" title="${esc(t.owner_name)}">${esc(t.owner_name)}</div>
+        <div class="podium-name">${esc(t.owner_name)}</div>
         <div class="podium-pts">${t.total} <span style="font-size:9px;color:var(--muted);font-weight:400">pts</span></div>
-        <div style="font-size:9px;color:var(--muted);margin-top:1px;padding:0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%">C: ${esc(t.captain_name||"—")}</div>
-        <div style="font-size:8px;color:var(--muted);opacity:.7;padding:0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%">VC: ${esc(t.vc_name||"—")}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:2px">C:${esc(t.captain_name)}</div>
       </div>`).join("")}</div>`;
   }
 
@@ -728,9 +727,7 @@ async function submitTeam(){
       body:JSON.stringify({owner_name:ownerName,player_ids:playerIds.map(Number),captain_id:+captainId,vc_id:+vcId})});
     const data=await res.json();
     if(!res.ok){msg.innerHTML=`<div class="error-msg">⚠ ${esc(data.error)}</div>`;return;}
-    const verb = data.updated ? "updated" : "registered";
-    const emoji = data.updated ? "🔄" : "🎉";
-    msg.innerHTML=`<div class="success-msg">✓ Team ${verb}! Good luck, ${esc(ownerName)} ${emoji}</div>`;
+    msg.innerHTML=`<div class="success-msg">✓ Team registered! Good luck, ${esc(ownerName)} 🎉</div>`;
     state.newTeam={ownerName:"",playerIds:[],captainId:"",vcId:""};
     await fetchAll(); setTimeout(()=>setTab("leaderboard"),1500);
   }catch(e){msg.innerHTML=`<div class="error-msg">Network error</div>`;}

@@ -38,20 +38,3 @@ build/
 *.xlsx
 # Local test cache — real player names, never publish
 templates/test-cache/
-
-# ─── Tunnel binaries — not part of source ─────────────────────────────────────
-ngrok.exe
-cloudflared.exe
-*.exe
-
-# ─── Screenshots with real player names ───────────────────────────────────────
-docs/screenshots/
-
-# ─── PDF guide (contains real player screenshots) ─────────────────────────────
-CH_Eleven_Guide.pdf
-
-# ─── Scratch / dev leftovers ──────────────────────────────────────────────────
-frontend/public/admin-upload-section.txt
-backend/bulk-upload-endpoint.js
-backend/migration-temp.js
-frontend/package-lock.json

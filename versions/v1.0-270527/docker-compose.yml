@@ -63,26 +63,4 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:5000/health | grep -q healthy"]
       interval: 15s
-      timeout: 10s
-      retries: 5
-      start_period: 45s
-    volumes:
-      - /tmp/uploads:/tmp/uploads
-
-  frontend:
-    build: ./frontend
-    restart: unless-stopped
-    ports:
-      - "3000:80"
-    depends_on:
-      - backend
-    networks:
-      - ch-eleven-net
-
-volumes:
-  pg_data:
-    driver: local
-
-networks:
-  ch-eleven-net:
-    driver: bridge
+     
