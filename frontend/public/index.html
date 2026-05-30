@@ -1005,9 +1005,24 @@ function handleLogoClick(){
   }
 }
 
-function setAdminKey(){
+async function setAdminKey(){
   const k=document.getElementById("admin-key-inp")?.value.trim();
-  if(!k)return; state.adminKey=k; sessionStorage.setItem("ch11-admin-key",k);
+  if(!k)return;
+  const btn=document.querySelector(".admin-gate .btn-primary");
+  const err=document.getElementById("admin-key-err");
+  if(btn){btn.disabled=true;btn.textContent="Checking...";}
+  try{
+    const res=await fetch(`${API}/admin/ping`,{headers:{"x-admin-key":k}});
+    if(res.status===401){
+      if(err)err.innerHTML="❌ Wrong key — ask the host for the correct admin key.";
+      if(btn){btn.disabled=false;btn.textContent="Enter";}
+      return;
+    }
+  }catch(e){
+    // Network issue — still allow entry (offline graceful)
+    if(err)err.innerHTML="⚠ Could not verify key (network issue) — trying anyway.";
+  }
+  state.adminKey=k; sessionStorage.setItem("ch11-admin-key",k);
   const nb=document.getElementById("admin-nav-btn"); if(nb) nb.style.display="";
   render();
 }
@@ -1019,25 +1034,29 @@ async function saveMatch(){
     venue:v("m-venue"),match_date:v("m-date"),overs:parseInt(v("m-overs")),status:v("m-status")};
   try{
     const res=await fetch(`${API}/match`,{method:"PUT",headers:adminHeaders(),body:JSON.stringify(body)});
-    if(!res.ok){state.adminErr=(await res.json()).error;}
-    else{state.adminMsg="✓ Match info saved";await fetchAll();}
-  }catch{state.adminErr="Network error";}
-  render();
+    const d=await res.json();
+    if(res.status===401){state.adminErr="❌ Admin key rejected — set ADMIN_SECRET in Railway Variables.";render();return;}
+    if(!res.ok){state.adminErr=d.error||"Save failed";}
+    else{state.adminMsg="✓ Match info saved";}
+  }catch(e){state.adminErr="Network error: "+e.message;}
+  await fetchAll();
 }
 
 async function addPlayer(){
   const name=v("np-name").trim(),ct=v("np-team").trim(),role=v("np-role");
-  if(!name)return;
+  if(!name){state.adminErr="Player name is required.";render();return;}
   try{
     const res=await fetch(`${API}/players`,{method:"POST",headers:adminHeaders(),body:JSON.stringify({name,cric_team:ct,role})});
+    const d=await res.json();
+    if(res.status===401){state.adminErr="❌ Admin key rejected — set ADMIN_SECRET in Railway Variables.";render();return;}
     if(res.ok){
       state.adminMsg=`✓ Added ${name}`;
-      // Clear input fields after successful add
       const inp=document.getElementById("np-name"); if(inp)inp.value="";
+      const tinp=document.getElementById("np-team"); if(tinp)tinp.value=ct; // keep team for batch adding
     } else {
-      const d=await res.json(); state.adminErr=d.error||"Failed to add player";
+      state.adminErr=d.error||"Failed to add player";
     }
-  }catch{ state.adminErr="Network error"; }
+  }catch(e){ state.adminErr="Network error: "+e.message; }
   await fetchAll();
 }
 
@@ -1080,7 +1099,7 @@ async function startNewGame(){
     const data=await res.json();
     if(!res.ok){state.adminErr=data.error||"Reset failed";}
     else{state.adminMsg="✓ New game started!";await fetchAll();setTab("leaderboard");}
-  }catch{state.adminErr="Network error";}
+  }catch(e){state.adminErr="Network error: "+e.message;}
   render();
 }
 
@@ -1205,17 +1224,25 @@ function showFilePreview(text,filename){
 
 async function uploadSquadFile(event){
   const file=event.target.files[0]; if(!file)return;
-  const fd=new FormData(); fd.append("file",file,file.name);
   const msg=document.getElementById("squad-upload-msg");
+  if(msg)msg.innerHTML=`<div style="color:var(--muted);font-size:12px">⏳ Uploading ${esc(file.name)}…</div>`;
+  const fd=new FormData(); fd.append("file",file,file.name);
   try{
     const res=await fetch(`${API}/squad/upload`,{method:"POST",headers:{"x-admin-key":state.adminKey},body:fd});
     const data=await res.json();
-    if(!res.ok){if(msg)msg.innerHTML=`<div class="error-msg">⚠ ${esc(data.error)}</div>`;}
+    if(res.status===401){
+      if(msg)msg.innerHTML=`<div class="error-msg">❌ Admin key rejected — go to Railway dashboard → Variables → set ADMIN_SECRET=ch11@Lokey549</div>`;
+      return;
+    }
+    if(!res.ok){if(msg)msg.innerHTML=`<div class="error-msg">⚠ ${esc(data.error||"Upload failed")}</div>`;}
     else{
-      if(msg)msg.innerHTML=`<div class="success-msg">✓ ${data.created||data.players_loaded||0} players loaded</div>`;
+      if(msg)msg.innerHTML=`<div class="success-msg">✓ ${data.players_loaded||data.created||0} players loaded from ${esc(file.name)}</div>`;
+      state.adminMsg=`✓ Squad loaded: ${data.players_loaded||data.created||0} players`;
       await fetchAll();
     }
-  }catch(e){if(msg)msg.innerHTML=`<div class="error-msg">Network error: ${esc(e.message)}</div>`;}
+  }catch(e){if(msg)msg.innerHTML=`<div class="error-msg">⚠ Network error: ${esc(e.message)}</div>`;}
+  // Reset input so same file can be re-selected
+  event.target.value="";
 }
 
 async function uploadMatchData(){

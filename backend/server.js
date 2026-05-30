@@ -14,7 +14,10 @@ const path     = require("path");
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use("/templates", express.static(path.join(__dirname, "../templates")));
+const templateDir = fs.existsSync(path.join(__dirname, "templates"))
+  ? path.join(__dirname, "templates")       // Railway: /app/templates
+  : path.join(__dirname, "../templates");   // local docker: backend/../templates
+app.use("/templates", express.static(templateDir));
 
 const upload = multer({ dest: "/tmp/uploads", limits: { fileSize: 50 * 1024 * 1024 } });
 
@@ -24,6 +27,9 @@ const ADMIN_SECRET = process.env.ADMIN_SECRET || "ch11-admin-2026";
 
 // Health — instant 200, no DB (Railway + docker healthcheck)
 app.get("/health", (req, res) => res.json({ status: "ok", time: new Date().toISOString() }));
+
+// Admin key verification — lets frontend confirm key is correct before showing panel
+app.get("/api/admin/ping", adminOnly, (req, res) => res.json({ ok: true }));
 
 // ── Startup: schema init + migrations ────────────────────────────────────────
 (async () => {
