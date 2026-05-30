@@ -15,6 +15,7 @@ RUN npm install --production
 COPY backend/server.js .
 COPY backend/scorecard-parser.js .
 COPY backend/ocr-routes.js .
+COPY backend/schema.sql .
 
 # Copy frontend static files → served by Express on Railway
 COPY frontend/public/ ./public/
