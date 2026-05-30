@@ -870,7 +870,23 @@ async function parseCSVViaPython(csvContent) {
       const parsed = await r.json();
       if (parsed.match_summary?.match) return parsed;
     }
-    throw new Error("OCR service returned no match name");
+    throw new Error("OCR service returned invalid response");
+  } catch (e) {
+    console.warn("[csv-parse] OCR service unavailable, using JS parser:", e.message);
+    return parseInningsCSV(csvContent);
+  }
+}
+
+// ─── Serve frontend static files (used when deployed to Railway) ──────────────
+app.use(express.static(path.join(__dirname, "public")));
+app.get("*", (req, res, next) => {
+  if (req.path.startsWith("/api") || req.path.startsWith("/templates")) return next();
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ─── Start server ─────────────────────────────────────────────────────────────
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`CH_Eleven API running on :${PORT}`));ror("OCR service returned no match name");
   } catch (e) {
     console.warn("OCR CSV parse failed, using JS fallback parser:", e.message);
     return parseCSVDirectly(csvContent);
