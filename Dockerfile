@@ -13,7 +13,6 @@ RUN npm install --production
 
 # Copy backend source
 COPY backend/server.js .
-COPY backend/schema.sql .
 COPY backend/scorecard-parser.js .
 COPY backend/ocr-routes.js .
 

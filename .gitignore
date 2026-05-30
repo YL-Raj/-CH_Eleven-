@@ -33,7 +33,7 @@ build/
 *.log
 
 # ─── Real match data — keep off public repo ───────────────────────────────────
-*.sql
+backup.sql
 *.docx
 *.xlsx
 # Local test cache — real player names, never publish
