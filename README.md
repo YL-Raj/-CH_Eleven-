@@ -183,5 +183,5 @@ Redistribution, modification, or commercial use without explicit written permiss
 ---
 
 <div align="center">
-  <sub>Developed with ❤️ by <strong>Loki.Y</strong> · Unity Pride League Kakinada</sub>
+  <sub>Developed with ❤️ by <strong>Loki.Y</strong> ·SPARTAN's</sub>
 </div>
